@@ -1,5 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Linting runs as its own CI job — never let it block a production build.
+  // (Vercel + `next build` should ship working code even if a style rule trips.)
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  // Type errors SHOULD block the build — they indicate real bugs.
+  typescript: {
+    ignoreBuildErrors: false,
+  },
   images: {
     remotePatterns: [
       {

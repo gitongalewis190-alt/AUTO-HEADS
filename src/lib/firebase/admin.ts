@@ -55,21 +55,18 @@ export function getAdminStorage(): Storage {
 // These are getters so they remain lazy.
 export const adminDb = new Proxy({} as Firestore, {
   get(_, prop) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (getAdminDb() as any)[prop];
+    return (getAdminDb() as unknown as Record<string | symbol, unknown>)[prop];
   },
 });
 
 export const adminAuth = new Proxy({} as Auth, {
   get(_, prop) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (getAdminAuth() as any)[prop];
+    return (getAdminAuth() as unknown as Record<string | symbol, unknown>)[prop];
   },
 });
 
 export const adminStorage = new Proxy({} as Storage, {
   get(_, prop) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (getAdminStorage() as any)[prop];
+    return (getAdminStorage() as unknown as Record<string | symbol, unknown>)[prop];
   },
 });

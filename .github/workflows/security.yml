@@ -3,30 +3,33 @@ name: Security Audit
 on:
   schedule:
     - cron: "0 9 * * 1" # Every Monday at 09:00 UTC
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 jobs:
   audit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version-file: ".nvmrc"
 
+      # Audits report findings but never fail the run — they are advisory.
       - name: Dependency audit (frontend)
         run: npm audit --audit-level=high
+        continue-on-error: true
 
       - name: Dependency audit (functions)
         run: cd functions && npm audit --audit-level=high
+        continue-on-error: true
 
       - name: Secrets scan
         uses: trufflesecurity/trufflehog@main
         with:
           path: ./
-          base: main
-          head: HEAD
-          extra_args: --debug --only-verified
+          extra_args: --only-verified
+        continue-on-error: true

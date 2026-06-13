@@ -1,8 +1,9 @@
 name: Preview Deployment
 
+# Vercel's native Git integration creates preview deploys per PR automatically.
+# This workflow is a manual fallback — requires VERCEL_* secrets.
 on:
-  pull_request:
-    branches: [main]
+  workflow_dispatch:
 
 jobs:
   preview:

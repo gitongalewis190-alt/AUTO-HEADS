@@ -6,6 +6,8 @@ functions/node_modules/
 .next/
 out/
 build/
+next-env.d.ts
+*.tsbuildinfo
 
 # Environment — NEVER commit secrets
 .env.local

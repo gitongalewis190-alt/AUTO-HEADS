@@ -1,8 +1,10 @@
 name: Deploy to Production
 
+# Vercel's native Git integration handles automatic deploys from `main`.
+# This workflow is a manual fallback — enable by running it from the Actions tab.
+# Requires secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID, NEXT_PUBLIC_*.
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 jobs:
   deploy:

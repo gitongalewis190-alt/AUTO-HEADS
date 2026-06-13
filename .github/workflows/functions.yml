@@ -1,10 +1,9 @@
 name: Deploy Cloud Functions
 
+# Manual trigger — requires FIREBASE_TOKEN secret. Run from the Actions tab
+# once Firebase credentials are configured.
 on:
-  push:
-    branches: [main]
-    paths:
-      - "functions/**"
+  workflow_dispatch:
 
 jobs:
   deploy-functions:

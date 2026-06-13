@@ -6,6 +6,14 @@ Format: `## [version] — YYYY-MM-DD`
 
 ---
 
+## [0.1.1] — 2026-06-13
+
+- Landing page: orbital rings, animated grid lines, ignition GET STARTED button
+- Build/deploy hardening: next.config.mjs, lazy Firebase Admin, force-dynamic
+  auth-gated routes, ESLint config, pinned Node version
+- Mandatory smoke tests (34) wired into CI
+- Verified clean: type-check, lint, tests, and production build all pass
+
 ## [0.1.0] — 2026-06-13
 
 - Initial repository structure created

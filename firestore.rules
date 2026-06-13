@@ -1,0 +1,89 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ─── Helper Functions ────────────────────────────────────────────────────
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isAuthenticated() && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    function isProjectCreator(projectId) {
+      return isAuthenticated() &&
+        get(/databases/$(database)/documents/projects/$(projectId)).data.creatorId == request.auth.uid;
+    }
+
+    // ─── Users ───────────────────────────────────────────────────────────────
+
+    match /users/{uid} {
+      allow read: if isAuthenticated();
+      allow create: if isOwner(uid);
+      allow update: if isOwner(uid) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // ─── Projects ────────────────────────────────────────────────────────────
+
+    match /projects/{projectId} {
+      allow read: if true; // public read
+      allow create: if isAuthenticated();
+      allow update: if isProjectCreator(projectId) || isAdmin();
+      allow delete: if isProjectCreator(projectId) || isAdmin();
+    }
+
+    // ─── Comments ────────────────────────────────────────────────────────────
+
+    match /comments/{commentId} {
+      allow read: if true;
+      allow create: if isAuthenticated();
+      allow update: if isOwner(resource.data.userId) || isAdmin();
+      allow delete: if isOwner(resource.data.userId) || isAdmin();
+    }
+
+    // ─── Transactions ────────────────────────────────────────────────────────
+
+    match /transactions/{transactionId} {
+      allow read: if isAuthenticated() &&
+        (resource.data.buyerId == request.auth.uid ||
+         resource.data.sellerId == request.auth.uid ||
+         isAdmin());
+      // Transactions are write-once from server (Cloud Functions only)
+      allow create, update, delete: if false;
+    }
+
+    // ─── Interactions ────────────────────────────────────────────────────────
+
+    match /interactions/{interactionId} {
+      allow read: if isAuthenticated() &&
+        (resource.data.initiatorId == request.auth.uid ||
+         resource.data.recipientId == request.auth.uid ||
+         isAdmin());
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin();
+    }
+
+    // ─── Supporters ──────────────────────────────────────────────────────────
+
+    match /supporters/{supporterId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ─── Platform Settings ───────────────────────────────────────────────────
+
+    match /settings/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+functions/node_modules/
+
+# Next.js
+.next/
+out/
+build/
+
+# Environment — NEVER commit secrets
+.env.local
+.env.*.local
+*.env
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+functions/.runtimeconfig.json
+
+# Vercel
+.vercel/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/settings.json
+.idea/
+*.swp
+
+# Misc
+*.log
+coverage/
+.turbo/

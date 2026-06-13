@@ -1,0 +1,32 @@
+name: Security Audit
+
+on:
+  schedule:
+    - cron: "0 9 * * 1" # Every Monday at 09:00 UTC
+  push:
+    branches: [main]
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Dependency audit (frontend)
+        run: npm audit --audit-level=high
+
+      - name: Dependency audit (functions)
+        run: cd functions && npm audit --audit-level=high
+
+      - name: Secrets scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: main
+          head: HEAD
+          extra_args: --debug --only-verified

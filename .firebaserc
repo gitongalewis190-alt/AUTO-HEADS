@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "autoheads-prod",
+    "prod": "autoheads-prod",
+    "staging": "autoheads-staging"
+  }
+}

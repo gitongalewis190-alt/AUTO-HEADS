@@ -1,0 +1,63 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // ─── Helper Functions ────────────────────────────────────────────────────
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return request.auth.uid == uid;
+    }
+
+    function isValidImageType() {
+      return request.resource.contentType.matches('image/.*');
+    }
+
+    function isValidVideoType() {
+      return request.resource.contentType.matches('video/.*');
+    }
+
+    function isValidDocType() {
+      return request.resource.contentType.matches('application/pdf') ||
+             request.resource.contentType.matches('application/.*document.*');
+    }
+
+    function isUnder50MB() {
+      return request.resource.size < 50 * 1024 * 1024;
+    }
+
+    function isUnder200MB() {
+      return request.resource.size < 200 * 1024 * 1024;
+    }
+
+    // ─── User Profile Images ─────────────────────────────────────────────────
+
+    match /users/{uid}/logo/{fileName} {
+      allow read: if true;
+      allow write: if isAuthenticated() && isOwner(uid) && isValidImageType() && isUnder50MB();
+      allow delete: if isAuthenticated() && isOwner(uid);
+    }
+
+    // ─── Project Media ───────────────────────────────────────────────────────
+
+    match /projects/{uid}/{projectId}/{fileName} {
+      allow read: if true;
+      allow create: if isAuthenticated() && isOwner(uid) &&
+        (isValidImageType() || isValidVideoType() || isValidDocType()) &&
+        isUnder200MB();
+      allow delete: if isAuthenticated() && isOwner(uid);
+    }
+
+    // ─── Supporter Logos ─────────────────────────────────────────────────────
+
+    match /supporters/{fileName} {
+      allow read: if true;
+      // Admin uploads handled via Cloud Functions — no direct client write
+      allow write: if false;
+    }
+  }
+}

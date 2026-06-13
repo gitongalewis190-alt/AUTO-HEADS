@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { cookies } from "next/headers";
 import { requireAdmin } from "@/lib/auth/guards";
 import { AdminSidebar } from "@/components/layout/AdminSidebar";

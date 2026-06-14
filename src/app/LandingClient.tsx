@@ -4,14 +4,13 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./landing.module.css";
 
+// Web Speech API fallback — used only if ElevenLabs key is not configured.
 function pickDeepVoice(): SpeechSynthesisVoice | null {
   const voices = window.speechSynthesis.getVoices();
   const preferred = [
     "Google UK English Male",
     "Microsoft Ryan Online (Natural)",
-    "Microsoft Guy Online (Natural)",
     "Microsoft David Desktop",
-    "Microsoft David - English (United States)",
     "Daniel",
     "Alex",
   ];
@@ -22,45 +21,69 @@ function pickDeepVoice(): SpeechSynthesisVoice | null {
   return voices.find(v => v.lang.startsWith("en")) ?? null;
 }
 
+function wssSpeak(text: string, onStart: () => void, onEnd: () => void) {
+  if (!window.speechSynthesis) { onEnd(); return; }
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  const voice = pickDeepVoice();
+  if (voice) utt.voice = voice;
+  utt.rate   = 0.80;
+  utt.pitch  = 0.70;
+  utt.volume = 0.90;
+  utt.onstart = onStart;
+  utt.onend   = onEnd;
+  utt.onerror = onEnd;
+  window.speechSynthesis.speak(utt);
+}
+
 export default function LandingClient() {
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const hasSpoken = useRef(false);
+  const hasSpoken   = useRef(false);
+  const audioRef    = useRef<HTMLAudioElement | null>(null);
 
-  const speak = useCallback((text: string) => {
-    if (typeof window === "undefined" || !window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
+  const speak = useCallback(async (text: string) => {
+    // Cancel any in-progress audio
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    if (typeof window !== "undefined" && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    const voice = pickDeepVoice();
-    if (voice) utterance.voice = voice;
-    utterance.rate  = 0.80;
-    utterance.pitch = 0.70;
-    utterance.volume = 0.90;
+    try {
+      const res = await fetch(`/api/tts?text=${encodeURIComponent(text)}`);
+      if (!res.ok) throw new Error("no-key");
 
-    utterance.onstart = () => setIsSpeaking(true);
-    utterance.onend   = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
+      const blob = await res.blob();
+      const url  = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      audioRef.current = audio;
 
-    window.speechSynthesis.speak(utterance);
+      audio.onplay   = () => setIsSpeaking(true);
+      audio.onended  = () => { setIsSpeaking(false); URL.revokeObjectURL(url); };
+      audio.onerror  = () => { setIsSpeaking(false); URL.revokeObjectURL(url); };
+
+      await audio.play();
+    } catch {
+      // ElevenLabs key not set — fall back to Web Speech API
+      wssSpeak(text, () => setIsSpeaking(true), () => setIsSpeaking(false));
+    }
   }, []);
 
-  // Browsers require a user gesture before speechSynthesis will play.
-  // Listen for the very first interaction on the page, then speak once.
+  // Speak on the first user interaction — browsers require a gesture
+  // before ANY audio (including speech synthesis) is allowed to play.
   useEffect(() => {
     const fire = () => {
       if (hasSpoken.current) return;
       hasSpoken.current = true;
       speak("Let's get started.");
     };
-
-    // pointerdown covers both mouse click and touch tap
     document.addEventListener("pointerdown", fire, { once: true });
-    // also catch keyboard navigation
-    document.addEventListener("keydown", fire, { once: true });
-
+    document.addEventListener("keydown",     fire, { once: true });
     return () => {
       document.removeEventListener("pointerdown", fire);
-      document.removeEventListener("keydown", fire);
+      document.removeEventListener("keydown",     fire);
     };
   }, [speak]);
 

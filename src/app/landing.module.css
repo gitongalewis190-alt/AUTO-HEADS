@@ -2,7 +2,7 @@
    AUTO HEADS — Landing Page Animations
    ───────────────────────────────────────────────────────────────────────── */
 
-/* ─── Wrapper ─────────────────────────────────────────────────────────────── */
+/* ─── Wrapper ──────────────────────────────────────────────────────────────── */
 
 .wrapper {
   position: relative;
@@ -11,12 +11,11 @@
   overflow: hidden;
   background: radial-gradient(ellipse 80% 60% at 50% 55%, #0d1525 0%, #070a12 60%, #04060d 100%);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-/* ─── Keyframes ───────────────────────────────────────────────────────────── */
+/* ─── Keyframes ────────────────────────────────────────────────────────────── */
 
 @keyframes spinCW {
   from { transform: rotate(0deg); }
@@ -36,11 +35,6 @@
 @keyframes scrollRight {
   from { background-position: 0 0; }
   to   { background-position: 80px 0; }
-}
-
-@keyframes pulseGlow {
-  0%, 100% { opacity: 0.85; transform: translate(-50%, -50%) scale(1); }
-  50%       { opacity: 1;    transform: translate(-50%, -50%) scale(1.18); }
 }
 
 @keyframes ledPulse {
@@ -65,12 +59,7 @@
   50%       { transform: scale(1.1); opacity: 0.9;  }
 }
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ─── Grid Lines ──────────────────────────────────────────────────────────── */
+/* ─── Grid Lines ───────────────────────────────────────────────────────────── */
 
 .verticalLines {
   position: absolute;
@@ -126,7 +115,7 @@
   z-index: 1;
 }
 
-/* ─── Rings Container ─────────────────────────────────────────────────────── */
+/* ─── Rings Container ──────────────────────────────────────────────────────── */
 
 .ringsContainer {
   position: absolute;
@@ -144,28 +133,26 @@
   will-change: transform;
 }
 
-/* Utility — each ring is centered via negative margin equal to half its size */
-
-/* Ring 1 — outermost, very faint amber hint */
+/* Ring 1 — outermost, very faint amber */
 .ring1 {
-  width: 580px; height: 580px;
-  margin-left: -290px; margin-top: -290px;
+  width: 720px; height: 720px;
+  margin-left: -360px; margin-top: -360px;
   border: 1px solid rgba(190, 158, 78, 0.12);
   animation: spinCW 50s linear infinite;
 }
 
 /* Ring 2 */
 .ring2 {
-  width: 500px; height: 500px;
-  margin-left: -250px; margin-top: -250px;
+  width: 620px; height: 620px;
+  margin-left: -310px; margin-top: -310px;
   border: 1px solid rgba(195, 162, 80, 0.2);
   animation: spinCCW 38s linear infinite;
 }
 
-/* Ring 3 — main visible gold ring (the car-rim-like outer ring) */
+/* Ring 3 — main visible gold ring */
 .ring3 {
-  width: 420px; height: 420px;
-  margin-left: -210px; margin-top: -210px;
+  width: 520px; height: 520px;
+  margin-left: -260px; margin-top: -260px;
   border: 2px solid rgba(215, 178, 82, 0.6);
   box-shadow:
     0 0 16px 2px rgba(215, 178, 82, 0.12),
@@ -175,37 +162,37 @@
 
 /* Ring 4 */
 .ring4 {
-  width: 345px; height: 345px;
-  margin-left: -172.5px; margin-top: -172.5px;
+  width: 430px; height: 430px;
+  margin-left: -215px; margin-top: -215px;
   border: 1px solid rgba(225, 185, 85, 0.28);
   animation: spinCCW 22s linear infinite;
 }
 
 /* Ring 5 — transitions to orange */
 .ring5 {
-  width: 275px; height: 275px;
-  margin-left: -137.5px; margin-top: -137.5px;
+  width: 345px; height: 345px;
+  margin-left: -172.5px; margin-top: -172.5px;
   border: 1.5px solid rgba(255, 155, 50, 0.38);
   animation: spinCW 17s linear infinite;
 }
 
 /* Ring 6 */
 .ring6 {
-  width: 210px; height: 210px;
-  margin-left: -105px; margin-top: -105px;
+  width: 265px; height: 265px;
+  margin-left: -132.5px; margin-top: -132.5px;
   border: 1px solid rgba(255, 115, 25, 0.48);
   animation: spinCCW 13s linear infinite;
 }
 
 /* Ring 7 — innermost, bright orange-red */
 .ring7 {
-  width: 155px; height: 155px;
-  margin-left: -77.5px; margin-top: -77.5px;
+  width: 200px; height: 200px;
+  margin-left: -100px; margin-top: -100px;
   border: 1px solid rgba(255, 85, 8, 0.6);
   animation: spinCW 9s linear infinite;
 }
 
-/* ─── Diagonal Shards ─────────────────────────────────────────────────────── */
+/* ─── Diagonal Shards ──────────────────────────────────────────────────────── */
 
 .shard {
   position: absolute;
@@ -251,33 +238,43 @@
   opacity: 0.5;
 }
 
-/* ─── Center Burn Glow ────────────────────────────────────────────────────── */
+/* ─── Speaking Indicator Ring ──────────────────────────────────────────────── */
+/* Appears around the button while Web Speech API is active — glows and pulses  */
+/* to make the button feel like it is the source of the voice.                  */
 
-.centerGlow {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 180px;
-  height: 180px;
-  margin-left: -90px;
-  margin-top: -90px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at center,
-    rgba(255, 235, 160, 1) 0%,
-    rgba(255, 170, 55,  0.95) 12%,
-    rgba(255, 100, 15,  0.7) 30%,
-    rgba(200, 55,  0,   0.35) 55%,
-    transparent 75%
-  );
-  animation: pulseGlow 3.2s ease-in-out infinite;
-  /* Screen blend burns through every layer above it including the button */
-  mix-blend-mode: screen;
-  pointer-events: none;
-  z-index: 25;
+@keyframes speakRingPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow:
+      0 0 20px  6px rgba(130, 60, 240, 0.40),
+      0 0 50px 15px rgba(100, 40, 210, 0.20);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow:
+      0 0 35px 12px rgba(150, 80, 255, 0.70),
+      0 0 80px 30px rgba(120, 60, 240, 0.35);
+  }
 }
 
-/* ─── GET STARTED Button ──────────────────────────────────────────────────── */
+.speakRing {
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  pointer-events: none;
+  opacity: 0;
+  transition: border-color 0.35s ease, opacity 0.35s ease;
+}
+
+.speakRingActive {
+  border-color: rgba(140, 70, 255, 0.65);
+  opacity: 1;
+  animation: speakRingPulse 0.45s ease-in-out infinite;
+}
+
+/* ─── GET STARTED Button ───────────────────────────────────────────────────── */
 
 .buttonArea {
   position: absolute;
@@ -307,7 +304,7 @@
   pointer-events: none;
 }
 
-/* Chrome bezel */
+/* Chrome bezel — rotates CW like a mechanical ignition collar */
 .chromeBezel {
   position: relative;
   width: 170px;
@@ -336,9 +333,11 @@
     0 0 35px 10px rgba(110, 55, 210, 0.35),
     0 0 70px 25px rgba(90,  40, 190, 0.15),
     0 6px 28px rgba(0, 0, 0, 0.85);
+  /* Slow CW rotation — mechanical collar effect */
+  animation: spinCW 12s linear infinite;
 }
 
-/* Blue LED ring */
+/* Counter-rotate so the inner face stays upright while the bezel spins */
 .blueLedRing {
   width: 144px;
   height: 144px;
@@ -347,10 +346,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: ledPulse 2.4s ease-in-out infinite;
+  /* Box-shadow pulse + exact CCW to cancel parent CW = text stays stationary */
+  animation: ledPulse 2.4s ease-in-out infinite, spinCCW 12s linear infinite;
 }
 
-/* Dark inner button — semi-transparent so mix-blend-mode glow burns through */
+/* Dark inner button face */
 .innerButton {
   width: 116px;
   height: 116px;
@@ -367,7 +367,6 @@
   cursor: pointer;
   transition: transform 0.12s ease, filter 0.12s ease;
   text-decoration: none;
-  /* Subtle inner highlight (convex feel) */
   box-shadow:
     inset 0 2px 6px rgba(255,255,255,0.07),
     inset 0 -2px 6px rgba(0,0,0,0.5);
@@ -396,75 +395,4 @@
     0 0 20px rgba(180, 210, 255, 0.3);
   user-select: none;
   pointer-events: none;
-}
-
-/* ─── AUTO HEADS Branding ─────────────────────────────────────────────────── */
-
-.branding {
-  position: absolute;
-  top: calc(50% - 160px);
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-  z-index: 30;
-  pointer-events: none;
-  animation: fadeUp 1s ease both;
-  animation-delay: 0.3s;
-  white-space: nowrap;
-}
-
-.logoText {
-  font-family: var(--font-poppins), sans-serif;
-  font-size: clamp(26px, 4.5vw, 52px);
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  background: linear-gradient(
-    135deg,
-    #ffffff 0%,
-    #e8c878 30%,
-    #ffffff 55%,
-    #c8a050 80%,
-    #f0d890 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin: 0;
-}
-
-.tagline {
-  font-family: var(--font-inter), sans-serif;
-  font-size: clamp(9px, 1.2vw, 12px);
-  color: rgba(160, 185, 215, 0.55);
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  margin: 6px 0 0;
-}
-
-/* ─── Bottom Nav Links ────────────────────────────────────────────────────── */
-
-.bottomLinks {
-  position: absolute;
-  bottom: 9%;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 36px;
-  z-index: 30;
-  animation: fadeUp 1s ease both;
-  animation-delay: 0.6s;
-}
-
-.navLink {
-  font-family: var(--font-inter), sans-serif;
-  font-size: 12px;
-  color: rgba(150, 175, 210, 0.6);
-  text-decoration: none;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  transition: color 0.2s ease;
-}
-
-.navLink:hover {
-  color: rgba(230, 240, 255, 0.9);
 }

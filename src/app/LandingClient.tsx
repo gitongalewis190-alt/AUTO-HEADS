@@ -19,7 +19,6 @@ function pickDeepVoice(): SpeechSynthesisVoice | null {
     const v = voices.find(v => v.name.includes(name));
     if (v) return v;
   }
-  // Any English male-sounding voice as last resort
   return voices.find(v => v.lang.startsWith("en")) ?? null;
 }
 
@@ -36,7 +35,7 @@ export default function LandingClient() {
     if (voice) utterance.voice = voice;
     utterance.rate  = 0.80;
     utterance.pitch = 0.70;
-    utterance.volume = 0.85;
+    utterance.volume = 0.90;
 
     utterance.onstart = () => setIsSpeaking(true);
     utterance.onend   = () => setIsSpeaking(false);
@@ -45,22 +44,24 @@ export default function LandingClient() {
     window.speechSynthesis.speak(utterance);
   }, []);
 
-  // Auto-speak 1 s after page opens
+  // Browsers require a user gesture before speechSynthesis will play.
+  // Listen for the very first interaction on the page, then speak once.
   useEffect(() => {
-    if (hasSpoken.current) return;
-    hasSpoken.current = true;
+    const fire = () => {
+      if (hasSpoken.current) return;
+      hasSpoken.current = true;
+      speak("Let's get started.");
+    };
 
-    const fire = () => speak("Let's get started.");
+    // pointerdown covers both mouse click and touch tap
+    document.addEventListener("pointerdown", fire, { once: true });
+    // also catch keyboard navigation
+    document.addEventListener("keydown", fire, { once: true });
 
-    const timer = setTimeout(() => {
-      if (window.speechSynthesis.getVoices().length > 0) {
-        fire();
-      } else {
-        window.speechSynthesis.addEventListener("voiceschanged", fire, { once: true });
-      }
-    }, 1000);
-
-    return () => clearTimeout(timer);
+    return () => {
+      document.removeEventListener("pointerdown", fire);
+      document.removeEventListener("keydown", fire);
+    };
   }, [speak]);
 
   return (
@@ -87,9 +88,6 @@ export default function LandingClient() {
       </div>
 
       {/* ── Layer 3: GET STARTED ignition button ─────────────────────── */}
-      {/* Chrome bezel spins CW; LED ring counter-spins CCW at same speed
-          so the text stays perfectly upright while the collar rotates.
-          speakRing pulses visually when voice is active — no layout change. */}
       <div className={styles.buttonArea}>
         <div
           className={`${styles.speakRing} ${isSpeaking ? styles.speakRingActive : ""}`}

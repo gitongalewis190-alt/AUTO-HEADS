@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────────────────
-   AUTO HEADS — Landing Page Animations  v0.1.3
+   AUTO HEADS — Landing Page Animations  v0.2.0
    ───────────────────────────────────────────────────────────────────────── */
 
 /* ─── Wrapper ──────────────────────────────────────────────────────────────── */
@@ -90,7 +90,7 @@
   will-change: transform;
 }
 
-/* ring1 removed — outermost is now ring2, slow CW per user request */
+/* ring1 removed — outermost is now ring2, slow CW */
 .ring2 {
   width: 620px; height: 620px;
   margin-left: -310px; margin-top: -310px;
@@ -142,24 +142,6 @@
 .shard3 { width: 220px; height: 1.5px; top: -45px;  left:  55px;  transform: rotate(-50deg); opacity: 0.6; }
 .shard4 { width: 190px; height: 1px;   top:  25px;  left: -90px;  transform: rotate(60deg);  opacity: 0.5; }
 
-/* ─── Speaking Ring ────────────────────────────────────────────────────────── */
-
-@keyframes speakRingPulse {
-  0%, 100% { transform: scale(1);    box-shadow: 0 0 20px 6px rgba(130,60,240,.40), 0 0 50px 15px rgba(100,40,210,.20); }
-  50%       { transform: scale(1.06); box-shadow: 0 0 35px 12px rgba(150,80,255,.70), 0 0 80px 30px rgba(120,60,240,.35); }
-}
-
-.speakRing {
-  position: absolute; width: 260px; height: 260px;
-  border-radius: 50%; border: 1.5px solid transparent;
-  pointer-events: none; opacity: 0;
-  transition: border-color .35s ease, opacity .35s ease;
-}
-.speakRingActive {
-  border-color: rgba(140,70,255,.65); opacity: 1;
-  animation: speakRingPulse .45s ease-in-out infinite;
-}
-
 /* ─── GET STARTED Button ───────────────────────────────────────────────────── */
 
 .buttonArea {
@@ -203,172 +185,18 @@
     rgba(28,34,60,.75) 0%, rgba(12,14,28,.88) 55%, rgba(6,8,18,.92) 100%);
   display: flex; align-items: center; justify-content: center;
   cursor: pointer; transition: transform .12s ease, filter .12s ease;
-  text-decoration: none;
+  text-decoration: none; overflow: hidden;
   box-shadow: inset 0 2px 6px rgba(255,255,255,.07), inset 0 -2px 6px rgba(0,0,0,.5);
 }
 .innerButton:hover  { transform: scale(.965); filter: brightness(1.1); }
 .innerButton:active { transform: scale(.95); }
 
-.getStartedText {
-  font-family: var(--font-poppins), sans-serif;
-  font-size: 14px; font-weight: 700; color: #ffffff;
-  text-align: center; line-height: 1.35; letter-spacing: .08em;
-  text-transform: uppercase;
-  text-shadow: 0 0 10px rgba(255,255,255,.55), 0 0 20px rgba(180,210,255,.3);
-  user-select: none; pointer-events: none;
-}
-
-/* ─── Voice Bot — bottom-left, always visible after page load ─────────────── */
-
-@keyframes botBreathe {
-  0%, 100% {
-    box-shadow: 0 0 12px 3px rgba(200,120,255,.35), 0 0 26px 8px rgba(170,90,240,.18);
-    transform: scale(1);
-  }
-  50% {
-    box-shadow: 0 0 22px 7px rgba(220,150,255,.55), 0 0 42px 14px rgba(190,110,255,.28);
-    transform: scale(1.05);
-  }
-}
-
-@keyframes botFloat {
-  0%, 100% { transform: translateY(0px);  }
-  50%       { transform: translateY(-5px); }
-}
-
-@keyframes waveBarIdle {
-  0%   { height: 3px;  opacity: .22; }
-  35%  { height: 8px;  opacity: .45; }
-  65%  { height: 4px;  opacity: .28; }
-  100% { height: 3px;  opacity: .22; }
-}
-
-@keyframes waveBarSpeak {
-  0%, 100% { height: 3px;  opacity: .55; }
-  50%       { height: 20px; opacity: 1;   }
-}
-
-@keyframes micPulseRing {
-  0%, 100% { transform: scale(1);    box-shadow: 0 0 8px 2px rgba(255,60,60,.35); }
-  50%       { transform: scale(1.14); box-shadow: 0 0 16px 6px rgba(255,60,60,.60); }
-}
-
-@keyframes bubbleFadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0);   }
-}
-
-/* Outer wrap — bottom-left; hidden until botVisible class added */
-.botWrap {
-  position: absolute;
-  bottom: 28px;
-  left: 28px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  z-index: 30;
-  pointer-events: auto;
-  /* Start invisible and tiny */
-  opacity: 0;
-  transform: scale(0) translateY(12px);
-  transform-origin: bottom left;
-  transition: opacity .5s ease, transform .6s cubic-bezier(.175,.885,.32,1.275);
-}
-
-.botVisible {
-  opacity: 1;
-  transform: scale(1) translateY(0);
-  /* Gentle float after spawn */
-  animation: botFloat 3.6s ease-in-out infinite;
-  animation-delay: .8s;
-}
-
-/* Speech bubble above avatar */
-.botBubble {
-  background: rgba(14, 6, 40, 0.92);
-  border: 1px solid rgba(180, 100, 255, 0.35);
-  border-radius: 10px 10px 10px 2px;
-  padding: 8px 12px;
-  max-width: 210px;
-  font-size: 11.5px;
-  line-height: 1.45;
-  color: rgba(210, 190, 255, 0.9);
-  letter-spacing: .02em;
-  box-shadow: 0 0 14px rgba(140,60,255,.22);
-  animation: bubbleFadeIn .4s ease both;
-  position: relative;
-}
-
-/* Downward triangle pointer at bottom-left */
-.botBubble::after {
-  content: "";
-  position: absolute;
-  bottom: -7px;
-  left: 16px;
-  width: 12px;
-  height: 12px;
-  background: rgba(14, 6, 40, 0.92);
-  border-right: 1px solid rgba(180,100,255,.35);
-  border-bottom: 1px solid rgba(180,100,255,.35);
-  transform: rotate(45deg);
-}
-
-/* Waveform row */
-.botWaveform {
-  display: flex;
-  align-items: flex-end;
-  gap: 3px;
-  height: 22px;
-  padding-left: 2px;
-}
-
-.waveBarIdle {
-  width: 3px;
-  border-radius: 2px;
-  background: rgba(170, 100, 255, 0.5);
-  flex-shrink: 0;
-  animation: waveBarIdle 2.4s ease-in-out infinite;
-}
-
-.waveBarSpeak {
-  width: 3px;
-  border-radius: 2px;
-  background: rgba(200, 140, 255, 0.85);
-  flex-shrink: 0;
-  animation: waveBarSpeak .42s ease-in-out infinite;
-}
-
-/* Avatar + controls row */
-.botControls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.botAvatar {
-  width: 52px; height: 52px; border-radius: 50%;
-  background: radial-gradient(circle at 38% 33%, rgba(80,30,160,.94), rgba(12,4,35,.97));
-  border: 1.5px solid rgba(190, 110, 255, 0.5);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 22px; cursor: pointer;
-  animation: botBreathe 2.8s ease-in-out infinite;
-}
-.botAvatar:hover { filter: brightness(1.15); }
-
-.micBtn {
-  width: 34px; height: 34px; border-radius: 50%;
-  background: rgba(14, 6, 40, 0.88);
-  border: 1px solid rgba(180, 100, 255, 0.32);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 15px; cursor: pointer;
-  transition: border-color .2s, box-shadow .2s; outline: none;
-}
-.micBtn:hover {
-  border-color: rgba(180,100,255,.65);
-  box-shadow: 0 0 10px 3px rgba(160,80,255,.25);
-}
-.micListening {
-  border-color: rgba(255,65,65,.85);
-  animation: micPulseRing .7s ease-in-out infinite;
+.buttonImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  pointer-events: none;
+  user-select: none;
 }

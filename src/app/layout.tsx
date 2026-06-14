@@ -3,6 +3,7 @@ import { Poppins, Inter } from "next/font/google";
 import "./globals.css";
 import { APP_NAME, APP_TAGLINE } from "@/lib/utils/constants";
 import { Toaster } from "@/components/ui/toaster";
+import ArtenBot from "@/components/ArtenBot";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${poppins.variable} ${inter.variable} bg-background text-text-primary antialiased`}>
         {children}
         <Toaster />
+        <ArtenBot />
       </body>
     </html>
   );

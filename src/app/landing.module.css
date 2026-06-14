@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────────────────
-   AUTO HEADS — Landing Page Animations
+   AUTO HEADS — Landing Page Animations  v0.1.3
    ───────────────────────────────────────────────────────────────────────── */
 
 /* ─── Wrapper ──────────────────────────────────────────────────────────────── */
@@ -13,29 +13,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
 /* ─── Keyframes ────────────────────────────────────────────────────────────── */
 
-@keyframes spinCW {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
+@keyframes spinCW  { from { transform: rotate(0deg); }   to { transform: rotate(360deg);  } }
+@keyframes spinCCW { from { transform: rotate(0deg); }   to { transform: rotate(-360deg); } }
 
-@keyframes spinCCW {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(-360deg); }
-}
-
-@keyframes scrollUp {
-  from { background-position: 0 0; }
-  to   { background-position: 0 -80px; }
-}
-
-@keyframes scrollRight {
-  from { background-position: 0 0; }
-  to   { background-position: 80px 0; }
-}
+@keyframes scrollUp    { from { background-position: 0 0; }    to { background-position: 0 -80px; } }
+@keyframes scrollRight { from { background-position: 0 0; }    to { background-position: 80px 0;  } }
 
 @keyframes ledPulse {
   0%, 100% {
@@ -62,69 +49,39 @@
 /* ─── Grid Lines ───────────────────────────────────────────────────────────── */
 
 .verticalLines {
-  position: absolute;
-  inset: 0;
+  position: absolute; inset: 0;
   background-image: repeating-linear-gradient(
-    90deg,
-    transparent,
-    transparent 13px,
-    rgba(155, 185, 230, 0.065) 13px,
-    rgba(155, 185, 230, 0.065) 15px
+    90deg, transparent, transparent 13px,
+    rgba(155,185,230,0.065) 13px, rgba(155,185,230,0.065) 15px
   );
   animation: scrollUp 3.5s linear infinite;
-  mask-image: radial-gradient(
-    ellipse 55% 75% at 50% 50%,
-    rgba(0,0,0,0.95) 30%,
-    rgba(0,0,0,0.3) 65%,
-    transparent 100%
-  );
-  -webkit-mask-image: radial-gradient(
-    ellipse 55% 75% at 50% 50%,
-    rgba(0,0,0,0.95) 30%,
-    rgba(0,0,0,0.3) 65%,
-    transparent 100%
-  );
-  pointer-events: none;
-  z-index: 1;
+  mask-image: radial-gradient(ellipse 55% 75% at 50% 50%,
+    rgba(0,0,0,0.95) 30%, rgba(0,0,0,0.3) 65%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 55% 75% at 50% 50%,
+    rgba(0,0,0,0.95) 30%, rgba(0,0,0,0.3) 65%, transparent 100%);
+  pointer-events: none; z-index: 1;
 }
 
 .horizontalLines {
-  position: absolute;
-  inset: 0;
+  position: absolute; inset: 0;
   background-image: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 17px,
-    rgba(155, 185, 230, 0.04) 17px,
-    rgba(155, 185, 230, 0.04) 19px
+    0deg, transparent, transparent 17px,
+    rgba(155,185,230,0.04) 17px, rgba(155,185,230,0.04) 19px
   );
   animation: scrollRight 5.5s linear infinite;
-  mask-image: radial-gradient(
-    ellipse 70% 45% at 50% 50%,
-    rgba(0,0,0,0.9) 20%,
-    rgba(0,0,0,0.25) 60%,
-    transparent 100%
-  );
-  -webkit-mask-image: radial-gradient(
-    ellipse 70% 45% at 50% 50%,
-    rgba(0,0,0,0.9) 20%,
-    rgba(0,0,0,0.25) 60%,
-    transparent 100%
-  );
-  pointer-events: none;
-  z-index: 1;
+  mask-image: radial-gradient(ellipse 70% 45% at 50% 50%,
+    rgba(0,0,0,0.9) 20%, rgba(0,0,0,0.25) 60%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 45% at 50% 50%,
+    rgba(0,0,0,0.9) 20%, rgba(0,0,0,0.25) 60%, transparent 100%);
+  pointer-events: none; z-index: 1;
 }
 
 /* ─── Rings Container ──────────────────────────────────────────────────────── */
 
 .ringsContainer {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  pointer-events: none;
-  z-index: 2;
+  position: absolute; top: 50%; left: 50%;
+  width: 0; height: 0;
+  pointer-events: none; z-index: 2;
 }
 
 .ring {
@@ -133,266 +90,285 @@
   will-change: transform;
 }
 
-/* Ring 1 — outermost, very faint amber */
-.ring1 {
-  width: 720px; height: 720px;
-  margin-left: -360px; margin-top: -360px;
-  border: 1px solid rgba(190, 158, 78, 0.12);
-  animation: spinCW 50s linear infinite;
-}
-
-/* Ring 2 */
+/* ring1 removed — outermost is now ring2, slow CW per user request */
 .ring2 {
   width: 620px; height: 620px;
   margin-left: -310px; margin-top: -310px;
-  border: 1px solid rgba(195, 162, 80, 0.2);
-  animation: spinCCW 38s linear infinite;
+  border: 1px solid rgba(195,162,80,0.22);
+  animation: spinCW 55s linear infinite;
 }
-
-/* Ring 3 — main visible gold ring */
 .ring3 {
   width: 520px; height: 520px;
   margin-left: -260px; margin-top: -260px;
-  border: 2px solid rgba(215, 178, 82, 0.6);
-  box-shadow:
-    0 0 16px 2px rgba(215, 178, 82, 0.12),
-    inset 0 0 16px 2px rgba(215, 178, 82, 0.06);
-  animation: spinCW 28s linear infinite;
+  border: 2px solid rgba(215,178,82,0.6);
+  box-shadow: 0 0 16px 2px rgba(215,178,82,0.12), inset 0 0 16px 2px rgba(215,178,82,0.06);
+  animation: spinCCW 28s linear infinite;
 }
-
-/* Ring 4 */
 .ring4 {
   width: 430px; height: 430px;
   margin-left: -215px; margin-top: -215px;
-  border: 1px solid rgba(225, 185, 85, 0.28);
-  animation: spinCCW 22s linear infinite;
+  border: 1px solid rgba(225,185,85,0.28);
+  animation: spinCW 22s linear infinite;
 }
-
-/* Ring 5 — transitions to orange */
 .ring5 {
   width: 345px; height: 345px;
   margin-left: -172.5px; margin-top: -172.5px;
-  border: 1.5px solid rgba(255, 155, 50, 0.38);
-  animation: spinCW 17s linear infinite;
+  border: 1.5px solid rgba(255,155,50,0.38);
+  animation: spinCCW 17s linear infinite;
 }
-
-/* Ring 6 */
 .ring6 {
   width: 265px; height: 265px;
   margin-left: -132.5px; margin-top: -132.5px;
-  border: 1px solid rgba(255, 115, 25, 0.48);
-  animation: spinCCW 13s linear infinite;
+  border: 1px solid rgba(255,115,25,0.48);
+  animation: spinCW 13s linear infinite;
 }
-
-/* Ring 7 — innermost, bright orange-red */
 .ring7 {
   width: 200px; height: 200px;
   margin-left: -100px; margin-top: -100px;
-  border: 1px solid rgba(255, 85, 8, 0.6);
-  animation: spinCW 9s linear infinite;
+  border: 1px solid rgba(255,85,8,0.6);
+  animation: spinCCW 9s linear infinite;
 }
 
 /* ─── Diagonal Shards ──────────────────────────────────────────────────────── */
 
 .shard {
-  position: absolute;
-  pointer-events: none;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(155, 195, 240, 0.12) 40%,
-    rgba(200, 220, 255, 0.18) 50%,
-    rgba(155, 195, 240, 0.12) 60%,
-    transparent 100%
-  );
+  position: absolute; pointer-events: none;
+  background: linear-gradient(90deg,
+    transparent 0%, rgba(155,195,240,0.12) 40%,
+    rgba(200,220,255,0.18) 50%, rgba(155,195,240,0.12) 60%, transparent 100%);
 }
+.shard1 { width: 340px; height: 1.5px; top: -0.75px; left: -170px; transform: rotate(-32deg); }
+.shard2 { width: 280px; height: 1px;   top: 55px;   left: -120px; transform: rotate(38deg);  opacity: 0.8; }
+.shard3 { width: 220px; height: 1.5px; top: -45px;  left:  55px;  transform: rotate(-50deg); opacity: 0.6; }
+.shard4 { width: 190px; height: 1px;   top:  25px;  left: -90px;  transform: rotate(60deg);  opacity: 0.5; }
 
-.shard1 {
-  width: 340px; height: 1.5px;
-  top: -0.75px; left: -170px;
-  transform: rotate(-32deg);
-  transform-origin: center;
-}
-
-.shard2 {
-  width: 280px; height: 1px;
-  top: 55px; left: -120px;
-  transform: rotate(38deg);
-  transform-origin: center;
-  opacity: 0.8;
-}
-
-.shard3 {
-  width: 220px; height: 1.5px;
-  top: -45px; left: 55px;
-  transform: rotate(-50deg);
-  transform-origin: center;
-  opacity: 0.6;
-}
-
-.shard4 {
-  width: 190px; height: 1px;
-  top: 25px; left: -90px;
-  transform: rotate(60deg);
-  transform-origin: center;
-  opacity: 0.5;
-}
-
-/* ─── Speaking Indicator Ring ──────────────────────────────────────────────── */
-/* Appears around the button while Web Speech API is active — glows and pulses  */
-/* to make the button feel like it is the source of the voice.                  */
+/* ─── Speaking Ring ────────────────────────────────────────────────────────── */
 
 @keyframes speakRingPulse {
-  0%, 100% {
-    transform: scale(1);
-    box-shadow:
-      0 0 20px  6px rgba(130, 60, 240, 0.40),
-      0 0 50px 15px rgba(100, 40, 210, 0.20);
-  }
-  50% {
-    transform: scale(1.06);
-    box-shadow:
-      0 0 35px 12px rgba(150, 80, 255, 0.70),
-      0 0 80px 30px rgba(120, 60, 240, 0.35);
-  }
+  0%, 100% { transform: scale(1);    box-shadow: 0 0 20px 6px rgba(130,60,240,.40), 0 0 50px 15px rgba(100,40,210,.20); }
+  50%       { transform: scale(1.06); box-shadow: 0 0 35px 12px rgba(150,80,255,.70), 0 0 80px 30px rgba(120,60,240,.35); }
 }
 
 .speakRing {
-  position: absolute;
-  width: 260px;
-  height: 260px;
-  border-radius: 50%;
-  border: 1.5px solid transparent;
-  pointer-events: none;
-  opacity: 0;
-  transition: border-color 0.35s ease, opacity 0.35s ease;
+  position: absolute; width: 260px; height: 260px;
+  border-radius: 50%; border: 1.5px solid transparent;
+  pointer-events: none; opacity: 0;
+  transition: border-color .35s ease, opacity .35s ease;
 }
-
 .speakRingActive {
-  border-color: rgba(140, 70, 255, 0.65);
-  opacity: 1;
-  animation: speakRingPulse 0.45s ease-in-out infinite;
+  border-color: rgba(140,70,255,.65); opacity: 1;
+  animation: speakRingPulse .45s ease-in-out infinite;
 }
 
 /* ─── GET STARTED Button ───────────────────────────────────────────────────── */
 
 .buttonArea {
-  position: absolute;
-  top: 50%;
-  left: 50%;
+  position: absolute; top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   z-index: 20;
 }
 
-/* Purple ripple aura outside the chrome ring */
 .outerAura {
-  position: absolute;
-  width: 240px;
-  height: 240px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    transparent 38%,
-    rgba(120, 55, 220, 0.14) 60%,
-    rgba(100, 40, 200, 0.07) 80%,
-    transparent 100%
-  );
-  animation: auraPulse 3.2s ease-in-out infinite;
-  pointer-events: none;
+  position: absolute; width: 240px; height: 240px; border-radius: 50%;
+  background: radial-gradient(circle, transparent 38%, rgba(120,55,220,.14) 60%,
+    rgba(100,40,200,.07) 80%, transparent 100%);
+  animation: auraPulse 3.2s ease-in-out infinite; pointer-events: none;
 }
 
-/* Chrome bezel — rotates CW like a mechanical ignition collar */
 .chromeBezel {
-  position: relative;
-  width: 170px;
-  height: 170px;
-  border-radius: 50%;
-  background: conic-gradient(
-    from 0deg,
-    #484848 0deg,
-    #b8b8b8 35deg,
-    #ececec 70deg,
-    #ffffff 100deg,
-    #f0f0f0 130deg,
-    #d0d0d0 160deg,
-    #a0a0a0 200deg,
-    #606060 230deg,
-    #484848 260deg,
-    #b0b0b0 300deg,
-    #e8e8e8 330deg,
-    #484848 360deg
-  );
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: relative; width: 170px; height: 170px; border-radius: 50%;
+  background: conic-gradient(from 0deg,
+    #484848 0deg, #b8b8b8 35deg, #ececec 70deg, #ffffff 100deg,
+    #f0f0f0 130deg, #d0d0d0 160deg, #a0a0a0 200deg, #606060 230deg,
+    #484848 260deg, #b0b0b0 300deg, #e8e8e8 330deg, #484848 360deg);
+  display: flex; align-items: center; justify-content: center;
   box-shadow:
-    0 0 0 1px rgba(255,255,255,0.08),
-    0 0 35px 10px rgba(110, 55, 210, 0.35),
-    0 0 70px 25px rgba(90,  40, 190, 0.15),
-    0 6px 28px rgba(0, 0, 0, 0.85);
-  /* Slow CW rotation — mechanical collar effect */
+    0 0 0 1px rgba(255,255,255,.08),
+    0 0 35px 10px rgba(110,55,210,.35),
+    0 0 70px 25px rgba(90,40,190,.15),
+    0 6px 28px rgba(0,0,0,.85);
   animation: spinCW 12s linear infinite;
 }
 
-/* Counter-rotate so the inner face stays upright while the bezel spins */
 .blueLedRing {
-  width: 144px;
-  height: 144px;
-  border-radius: 50%;
-  background: #080c1a;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* Box-shadow pulse + exact CCW to cancel parent CW = text stays stationary */
+  width: 144px; height: 144px; border-radius: 50%; background: #080c1a;
+  display: flex; align-items: center; justify-content: center;
   animation: ledPulse 2.4s ease-in-out infinite, spinCCW 12s linear infinite;
 }
 
-/* Dark inner button face */
 .innerButton {
-  width: 116px;
-  height: 116px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 42% 38%,
-    rgba(28, 34, 60, 0.75) 0%,
-    rgba(12, 14, 28, 0.88) 55%,
-    rgba(6, 8, 18, 0.92) 100%
-  );
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: transform 0.12s ease, filter 0.12s ease;
+  width: 116px; height: 116px; border-radius: 50%;
+  background: radial-gradient(circle at 42% 38%,
+    rgba(28,34,60,.75) 0%, rgba(12,14,28,.88) 55%, rgba(6,8,18,.92) 100%);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: transform .12s ease, filter .12s ease;
   text-decoration: none;
-  box-shadow:
-    inset 0 2px 6px rgba(255,255,255,0.07),
-    inset 0 -2px 6px rgba(0,0,0,0.5);
+  box-shadow: inset 0 2px 6px rgba(255,255,255,.07), inset 0 -2px 6px rgba(0,0,0,.5);
 }
-
-.innerButton:hover {
-  transform: scale(0.965);
-  filter: brightness(1.1);
-}
-
-.innerButton:active {
-  transform: scale(0.95);
-}
+.innerButton:hover  { transform: scale(.965); filter: brightness(1.1); }
+.innerButton:active { transform: scale(.95); }
 
 .getStartedText {
   font-family: var(--font-poppins), sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  color: #ffffff;
-  text-align: center;
-  line-height: 1.35;
-  letter-spacing: 0.08em;
+  font-size: 14px; font-weight: 700; color: #ffffff;
+  text-align: center; line-height: 1.35; letter-spacing: .08em;
   text-transform: uppercase;
-  text-shadow:
-    0 0 10px rgba(255, 255, 255, 0.55),
-    0 0 20px rgba(180, 210, 255, 0.3);
-  user-select: none;
-  pointer-events: none;
+  text-shadow: 0 0 10px rgba(255,255,255,.55), 0 0 20px rgba(180,210,255,.3);
+  user-select: none; pointer-events: none;
+}
+
+/* ─── Voice Bot — bottom-left, always visible after page load ─────────────── */
+
+@keyframes botBreathe {
+  0%, 100% {
+    box-shadow: 0 0 12px 3px rgba(200,120,255,.35), 0 0 26px 8px rgba(170,90,240,.18);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 22px 7px rgba(220,150,255,.55), 0 0 42px 14px rgba(190,110,255,.28);
+    transform: scale(1.05);
+  }
+}
+
+@keyframes botFloat {
+  0%, 100% { transform: translateY(0px);  }
+  50%       { transform: translateY(-5px); }
+}
+
+@keyframes waveBarIdle {
+  0%   { height: 3px;  opacity: .22; }
+  35%  { height: 8px;  opacity: .45; }
+  65%  { height: 4px;  opacity: .28; }
+  100% { height: 3px;  opacity: .22; }
+}
+
+@keyframes waveBarSpeak {
+  0%, 100% { height: 3px;  opacity: .55; }
+  50%       { height: 20px; opacity: 1;   }
+}
+
+@keyframes micPulseRing {
+  0%, 100% { transform: scale(1);    box-shadow: 0 0 8px 2px rgba(255,60,60,.35); }
+  50%       { transform: scale(1.14); box-shadow: 0 0 16px 6px rgba(255,60,60,.60); }
+}
+
+@keyframes bubbleFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+/* Outer wrap — bottom-left; hidden until botVisible class added */
+.botWrap {
+  position: absolute;
+  bottom: 28px;
+  left: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  z-index: 30;
+  pointer-events: auto;
+  /* Start invisible and tiny */
+  opacity: 0;
+  transform: scale(0) translateY(12px);
+  transform-origin: bottom left;
+  transition: opacity .5s ease, transform .6s cubic-bezier(.175,.885,.32,1.275);
+}
+
+.botVisible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  /* Gentle float after spawn */
+  animation: botFloat 3.6s ease-in-out infinite;
+  animation-delay: .8s;
+}
+
+/* Speech bubble above avatar */
+.botBubble {
+  background: rgba(14, 6, 40, 0.92);
+  border: 1px solid rgba(180, 100, 255, 0.35);
+  border-radius: 10px 10px 10px 2px;
+  padding: 8px 12px;
+  max-width: 210px;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: rgba(210, 190, 255, 0.9);
+  letter-spacing: .02em;
+  box-shadow: 0 0 14px rgba(140,60,255,.22);
+  animation: bubbleFadeIn .4s ease both;
+  position: relative;
+}
+
+/* Downward triangle pointer at bottom-left */
+.botBubble::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 16px;
+  width: 12px;
+  height: 12px;
+  background: rgba(14, 6, 40, 0.92);
+  border-right: 1px solid rgba(180,100,255,.35);
+  border-bottom: 1px solid rgba(180,100,255,.35);
+  transform: rotate(45deg);
+}
+
+/* Waveform row */
+.botWaveform {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 22px;
+  padding-left: 2px;
+}
+
+.waveBarIdle {
+  width: 3px;
+  border-radius: 2px;
+  background: rgba(170, 100, 255, 0.5);
+  flex-shrink: 0;
+  animation: waveBarIdle 2.4s ease-in-out infinite;
+}
+
+.waveBarSpeak {
+  width: 3px;
+  border-radius: 2px;
+  background: rgba(200, 140, 255, 0.85);
+  flex-shrink: 0;
+  animation: waveBarSpeak .42s ease-in-out infinite;
+}
+
+/* Avatar + controls row */
+.botControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.botAvatar {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: radial-gradient(circle at 38% 33%, rgba(80,30,160,.94), rgba(12,4,35,.97));
+  border: 1.5px solid rgba(190, 110, 255, 0.5);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; cursor: pointer;
+  animation: botBreathe 2.8s ease-in-out infinite;
+}
+.botAvatar:hover { filter: brightness(1.15); }
+
+.micBtn {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(14, 6, 40, 0.88);
+  border: 1px solid rgba(180, 100, 255, 0.32);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; cursor: pointer;
+  transition: border-color .2s, box-shadow .2s; outline: none;
+}
+.micBtn:hover {
+  border-color: rgba(180,100,255,.65);
+  box-shadow: 0 0 10px 3px rgba(160,80,255,.25);
+}
+.micListening {
+  border-color: rgba(255,65,65,.85);
+  animation: micPulseRing .7s ease-in-out infinite;
 }

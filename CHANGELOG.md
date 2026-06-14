@@ -6,6 +6,14 @@ Format: `## [version] — YYYY-MM-DD`
 
 ---
 
+## [0.1.2] — 2026-06-14
+
+- Landing page: rotating chrome bezel + counter-rotating LED ring (spinning ignition collar)
+- Voice: Web Speech API speaks "Let's get started." 1 s after page opens (deep male voice)
+- Speaking indicator: purple glow ring pulses around button while voice is active
+- Removed all text except GET STARTED (no logo, tagline, nav links, sun glow)
+- Zoom in: rings scaled up ~25 % (outer ring 580 → 720 px)
+
 ## [0.1.1] — 2026-06-13
 
 - Landing page: orbital rings, animated grid lines, ignition GET STARTED button

@@ -88,15 +88,26 @@ function classify(text: string): string {
   return FALLBACK[Math.floor(Math.random() * FALLBACK.length)];
 }
 
-interface ArtenBotProps {
-  isSpeaking?: boolean;
+// Web Speech fallback — pick a friendly female English voice
+function pickVoice(): SpeechSynthesisVoice | null {
+  const voices = window.speechSynthesis.getVoices();
+  for (const name of [
+    "Google UK English Female", "Microsoft Zira Desktop",
+    "Samantha", "Karen", "Moira", "Google US English",
+  ]) {
+    const v = voices.find(v => v.name.includes(name));
+    if (v) return v;
+  }
+  return voices.find(v => v.lang.startsWith("en")) ?? null;
 }
 
-export default function ArtenBot({ isSpeaking = false }: ArtenBotProps) {
+export default function ArtenBot() {
   const pathname       = usePathname();
   const waveRef        = useRef<HTMLCanvasElement | null>(null);
   const particleRef    = useRef<HTMLCanvasElement | null>(null);
   const audioRef       = useRef<HTMLAudioElement | null>(null);
+  const ctxRef         = useRef<AudioContext | null>(null);
+  const srcRef         = useRef<AudioBufferSourceNode | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const recognitionRef = useRef<any>(null);
   const greetIdx       = useRef(0);
@@ -104,8 +115,6 @@ export default function ArtenBot({ isSpeaking = false }: ArtenBotProps) {
   const [isOpen,      setIsOpen]      = useState(false);
   const [botSpeaking, setBotSpeaking] = useState(false);
   const [listening,   setListening]   = useState(false);
-
-  const activeSpeaking = isSpeaking || botSpeaking;
 
   // ── Particle canvas (above orb) ────────────────────────────────────────────
   useEffect(() => {
@@ -124,7 +133,7 @@ export default function ArtenBot({ isSpeaking = false }: ArtenBotProps) {
     let raf: number;
     const draw = () => {
       ctx.clearRect(0, 0, 100, 70);
-      const spk = activeSpeaking || listening;
+      const spk = botSpeaking || listening;
       pts.forEach(p => {
         p.life -= 0.007 + (spk ? 0.008 : 0);
         if (p.life <= 0) {
@@ -145,7 +154,7 @@ export default function ArtenBot({ isSpeaking = false }: ArtenBotProps) {
     };
     draw();
     return () => cancelAnimationFrame(raf);
-  }, [activeSpeaking, listening]);
+  }, [botSpeaking, listening]);
 
   // ── Waveform canvas (left of orb) ──────────────────────────────────────────
   useEffect(() => {
@@ -162,7 +171,7 @@ export default function ArtenBot({ isSpeaking = false }: ArtenBotProps) {
     let raf: number;
     const draw = () => {
       ctx.clearRect(0, 0, 16, 100);
-      if (activeSpeaking || listening) {
+      if (botSpeaking || listening) {
         bars.forEach(b => {
           b.phase += listening ? 0.09 : 0.2;
           b.h = 1 + Math.abs(Math.sin(b.phase)) * (listening ? 7 : 11);
@@ -180,7 +189,16 @@ export default function ArtenBot({ isSpeaking = false }: ArtenBotProps) {
     };
     draw();
     return () => cancelAnimationFrame(raf);
-  }, [activeSpeaking, listening]);
+  }, [botSpeaking, listening]);
+
+  // ── Stop any current audio ─────────────────────────────────────────────────
+  const stopAudio = useCallback(() => {
+    try { srcRef.current?.stop(); } catch { /* ignore */ }
+    srcRef.current = null;
+    audioRef.current?.pause();
+    audioRef.current = null;
+    window.speechSynthesis?.cancel();
+  }, []);
 
   // ── Start listening ─────────────────────────────────────────────────────────
   const startListening = useCallback(() => {
@@ -204,14 +222,37 @@ export default function ArtenBot({ isSpeaking = false }: ArtenBotProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ── Speak via ElevenLabs /api/bot-speak ────────────────────────────────────
+  // ── Speak via ElevenLabs → AudioContext → Web Speech fallback ─────────────
   const speakReply = useCallback(async (text: string) => {
-    audioRef.current?.pause();
-    audioRef.current = null;
+    stopAudio();
     setBotSpeaking(true);
+
+    const ctx = ctxRef.current;
+
     try {
       const res = await fetch(`/api/bot-speak?text=${encodeURIComponent(text)}`);
       if (!res.ok) throw new Error("no-tts");
+
+      if (ctx && ctx.state !== "closed") {
+        // AudioContext path — immune to autoplay policy once unlocked on tap
+        const arrayBuf = await res.arrayBuffer();
+        const audioBuf = await ctx.decodeAudioData(arrayBuf);
+        const src      = ctx.createBufferSource();
+        const gain     = ctx.createGain();
+        gain.gain.value = 0.90;
+        src.buffer = audioBuf;
+        src.connect(gain); gain.connect(ctx.destination);
+        srcRef.current = src;
+        src.onended = () => {
+          setBotSpeaking(false);
+          srcRef.current = null;
+          setTimeout(startListening, 300);
+        };
+        src.start();
+        return;
+      }
+
+      // AudioContext not available — blob URL fallback
       const blob  = await res.blob();
       const url   = URL.createObjectURL(blob);
       const audio = new Audio(url);
@@ -229,16 +270,34 @@ export default function ArtenBot({ isSpeaking = false }: ArtenBotProps) {
       };
       await audio.play();
     } catch {
+      // Web Speech API fallback — used when ELEVENLABS_API_KEY is not set
       setBotSpeaking(false);
+      if (typeof window === "undefined" || !window.speechSynthesis) return;
+      setBotSpeaking(true);
+      const utt = new SpeechSynthesisUtterance(text);
+      const v   = pickVoice();
+      if (v) utt.voice = v;
+      utt.rate = 0.88; utt.pitch = 1.05; utt.volume = 0.9;
+      utt.onend   = () => { setBotSpeaking(false); setTimeout(startListening, 300); };
+      utt.onerror = () => setBotSpeaking(false);
+      window.speechSynthesis.speak(utt);
     }
-  }, [startListening]);
+  }, [startListening, stopAudio]);
 
   // ── Tap handler ─────────────────────────────────────────────────────────────
   const handleClick = useCallback(async () => {
+    // Synchronously unlock AudioContext inside this gesture — fixes iOS Safari autoplay
+    if (!ctxRef.current) {
+      ctxRef.current = new AudioContext();
+    } else if (ctxRef.current.state === "suspended") {
+      ctxRef.current.resume();
+    }
+
     try { recognitionRef.current?.stop(); } catch { /* ignore */ }
     recognitionRef.current = null;
     setListening(false);
     if (!isOpen) setIsOpen(true);
+
     const greeting = GREETINGS[greetIdx.current % GREETINGS.length];
     greetIdx.current += 1;
     await speakReply(greeting);
@@ -246,9 +305,9 @@ export default function ArtenBot({ isSpeaking = false }: ArtenBotProps) {
 
   // ── Cleanup ─────────────────────────────────────────────────────────────────
   useEffect(() => () => {
-    audioRef.current?.pause();
+    stopAudio();
     try { recognitionRef.current?.stop(); } catch { /* ignore */ }
-  }, []);
+  }, [stopAudio]);
 
   // Hidden on landing page — only available from login/register onwards
   if (pathname === "/") return null;
@@ -257,25 +316,25 @@ export default function ArtenBot({ isSpeaking = false }: ArtenBotProps) {
   const eyeColor = listening ? "#34d399" : "#ffffff";
   const eyeGlow  = listening
     ? "0 0 8px #34d399, 0 0 16px rgba(52,211,153,0.6)"
-    : activeSpeaking
+    : botSpeaking
       ? "0 0 8px #fff, 0 0 16px rgba(160,200,255,0.7)"
       : "0 0 5px rgba(255,255,255,0.65)";
 
   const orbShadow = listening
     ? "inset 0 0 60px rgba(30,160,120,0.35), inset 0 0 25px rgba(52,211,153,0.2), 0 0 0 1.5px rgba(52,211,153,0.5), 0 0 24px rgba(52,211,153,0.3)"
-    : activeSpeaking
+    : botSpeaking
       ? "inset 0 0 60px rgba(40,80,220,0.5), inset 0 0 25px rgba(80,120,255,0.3), 0 0 0 1.5px rgba(100,140,255,0.6), 0 0 28px rgba(80,120,255,0.4)"
       : "inset 0 0 50px rgba(30,50,180,0.35), inset 0 0 20px rgba(60,90,200,0.2), 0 0 0 1px rgba(80,110,200,0.25), 0 0 16px rgba(60,90,200,0.2)";
 
   const faceGrad = listening
     ? "linear-gradient(135deg, rgba(0,210,160,0.55) 0%, rgba(30,190,190,0.45) 45%, rgba(80,80,220,0.35) 100%)"
-    : activeSpeaking
+    : botSpeaking
       ? "linear-gradient(135deg, rgba(0,200,220,0.55) 0%, rgba(60,130,255,0.50) 45%, rgba(120,60,220,0.40) 100%)"
       : "linear-gradient(135deg, rgba(0,180,200,0.40) 0%, rgba(50,110,240,0.38) 45%, rgba(100,50,200,0.30) 100%)";
 
   const orbAnim = listening
     ? "arten-listen 1.6s ease-in-out infinite"
-    : activeSpeaking
+    : botSpeaking
       ? "arten-shimmer 0.55s ease-in-out infinite alternate"
       : "arten-float 3.2s ease-in-out infinite";
 
@@ -285,7 +344,7 @@ export default function ArtenBot({ isSpeaking = false }: ArtenBotProps) {
         position: "fixed", bottom: 28, right: 24, zIndex: 9000,
         display: "flex", flexDirection: "column", alignItems: "center",
         userSelect: "none",
-        transform: `scale(${isOpen ? 1 : isSpeaking ? 0.7 : 0.6})`,
+        transform: `scale(${isOpen ? 1 : 0.6})`,
         transformOrigin: "bottom right",
         transition: "transform 0.55s cubic-bezier(0.34,1.5,0.64,1)",
         animation: "arten-entrance 0.7s cubic-bezier(0.34,1.5,0.64,1) 0.4s both",
@@ -307,7 +366,6 @@ export default function ArtenBot({ isSpeaking = false }: ArtenBotProps) {
           onKeyDown={e => e.key === "Enter" && handleClick()}
           style={{
             width: 100, height: 100, borderRadius: "50%", cursor: "pointer",
-            /* Deep dark sphere with blue-indigo rim glow — matches reference */
             background: "radial-gradient(circle at 38% 30%, rgba(70,100,160,0.5) 0%, rgba(12,16,45,0.92) 55%, rgba(4,5,18,0.98) 100%)",
             boxShadow: orbShadow,
             animation: orbAnim,
@@ -330,7 +388,7 @@ export default function ArtenBot({ isSpeaking = false }: ArtenBotProps) {
             background: faceGrad,
             boxShadow: listening
               ? "0 0 12px rgba(52,211,153,0.6), inset 0 0 8px rgba(52,211,153,0.3)"
-              : activeSpeaking
+              : botSpeaking
                 ? "0 0 12px rgba(80,160,255,0.7), inset 0 0 8px rgba(80,140,255,0.35)"
                 : "0 0 6px rgba(50,120,220,0.35), inset 0 0 6px rgba(60,100,200,0.2)",
             display: "flex", alignItems: "center", justifyContent: "space-evenly",
@@ -344,7 +402,7 @@ export default function ArtenBot({ isSpeaking = false }: ArtenBotProps) {
               backgroundSize: "4px 4px", pointerEvents: "none",
             }} />
 
-            {/* Twin eye bars — tall rectangular pills */}
+            {/* Twin eye bars */}
             {[0, 0.12].map((delay, i) => (
               <div key={i} style={{
                 width: 8, height: 20, borderRadius: 4,
@@ -352,7 +410,7 @@ export default function ArtenBot({ isSpeaking = false }: ArtenBotProps) {
                 boxShadow: eyeGlow,
                 animation: listening
                   ? `arten-eye-listen 1.2s ease-in-out infinite alternate ${delay}s`
-                  : activeSpeaking
+                  : botSpeaking
                     ? `arten-eye-pulse 0.5s ease-in-out infinite alternate ${delay * 0.7}s`
                     : "none",
                 transition: "background 0.3s, box-shadow 0.3s, height 0.2s",

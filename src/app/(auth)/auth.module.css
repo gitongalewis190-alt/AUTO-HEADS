@@ -136,33 +136,39 @@
     rgba(255, 255, 255, 0.07) 0%,
     rgba(255, 255, 255, 0.03) 100%
   );
-  border: 1px solid rgba(255, 255, 255, 0.10);
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
   box-shadow:
     0 25px 60px rgba(0, 0, 0, 0.5),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.12);
   animation: slideUp 0.5s ease both;
-  overflow: hidden;
 }
 
-/* Animated conic-gradient border */
+/* Animated conic-gradient border — mask-composite technique */
 .panel::before {
   content: "";
   position: absolute;
-  inset: -1px;
-  border-radius: 25px;
+  inset: 0;
+  border-radius: 24px;
+  padding: 1.5px;
   background: conic-gradient(
     from 0deg,
-    rgba(255, 107, 0, 0.35),
-    rgba(255, 255, 255, 0.08) 90deg,
-    rgba(0, 168, 232, 0.25) 180deg,
-    rgba(255, 255, 255, 0.05) 270deg,
-    rgba(255, 107, 0, 0.35) 360deg
+    rgba(255, 107, 0, 0.55),
+    rgba(255, 255, 255, 0.10) 90deg,
+    rgba(0, 168, 232, 0.40) 180deg,
+    rgba(255, 255, 255, 0.06) 270deg,
+    rgba(255, 107, 0, 0.55) 360deg
   );
-  z-index: -1;
   animation: borderSpin 10s linear infinite;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 
 /* ── Form Typography ─────────────────────────────────────── */

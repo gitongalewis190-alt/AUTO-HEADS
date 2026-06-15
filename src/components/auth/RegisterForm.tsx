@@ -362,9 +362,11 @@ export function RegisterForm() {
   };
 
   /* ── Resend OTP ── */
-  const handleResendOtp = async () => {
+  const handleResendOtp = () => {
     setOtp(["", "", "", "", "", ""]);
     setGlobalError("");
+    // .clear() releases the DOM widget so a fresh RecaptchaVerifier can attach
+    try { recaptchaRef.current?.clear(); } catch { /* ignore */ }
     recaptchaRef.current = null;
     setOtpSent(false);
   };

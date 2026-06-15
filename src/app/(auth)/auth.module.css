@@ -1,0 +1,696 @@
+/* ============================================================
+   AUTO HEADS — Auth Module CSS
+   Glassmorphism design system for login & registration pages
+   ============================================================ */
+
+/* ── Keyframe Animations ─────────────────────────────────── */
+
+@keyframes borderSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes shake {
+  0%   { transform: translateX(0); }
+  15%  { transform: translateX(-6px); }
+  30%  { transform: translateX(6px); }
+  45%  { transform: translateX(-4px); }
+  60%  { transform: translateX(4px); }
+  75%  { transform: translateX(-2px); }
+  90%  { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes slideUp {
+  0%   { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes spin {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ── Background ──────────────────────────────────────────── */
+
+.authBg {
+  position: relative;
+  width: 100%;
+  min-height: 100svh;
+  background-color: #0b0b12;
+  overflow: hidden;
+}
+
+.orb1 {
+  position: absolute;
+  top: -100px;
+  right: -100px;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, rgba(255, 107, 0, 0.10) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.orb2 {
+  position: absolute;
+  bottom: -80px;
+  left: -80px;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, rgba(0, 168, 232, 0.08) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dotGrid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Content Wrapper ─────────────────────────────────────── */
+
+.authContent {
+  position: relative;
+  z-index: 10;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px;
+  gap: 24px;
+}
+
+/* ── Brand Wordmark ──────────────────────────────────────── */
+
+.brand {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.brandAuto {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #FF6B00, #FFA500);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 0.04em;
+}
+
+.brandHeads {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+}
+
+/* ── Glass Panel ─────────────────────────────────────────── */
+
+.panel {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  border-radius: 24px;
+  padding: 40px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.07) 0%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  animation: slideUp 0.5s ease both;
+  overflow: hidden;
+}
+
+/* Animated conic-gradient border */
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 25px;
+  background: conic-gradient(
+    from 0deg,
+    rgba(255, 107, 0, 0.35),
+    rgba(255, 255, 255, 0.08) 90deg,
+    rgba(0, 168, 232, 0.25) 180deg,
+    rgba(255, 255, 255, 0.05) 270deg,
+    rgba(255, 107, 0, 0.35) 360deg
+  );
+  z-index: -1;
+  animation: borderSpin 10s linear infinite;
+}
+
+/* ── Form Typography ─────────────────────────────────────── */
+
+.formTitle {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 4px 0;
+  line-height: 1.2;
+}
+
+.formSubtitle {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0 0 28px 0;
+  font-family: var(--font-inter), sans-serif;
+}
+
+/* ── Field Groups ────────────────────────────────────────── */
+
+.fieldGroup {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.fieldLabel {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 6px;
+  letter-spacing: 0.02em;
+  font-family: var(--font-inter), sans-serif;
+}
+
+.fieldInput {
+  width: 100%;
+  height: 52px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1.5px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 0 44px;
+  color: #ffffff;
+  font-size: 15px;
+  font-family: var(--font-inter), sans-serif;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.fieldInput::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.fieldInput:focus {
+  border-color: rgba(255, 107, 0, 0.55);
+  background: rgba(255, 107, 0, 0.04);
+  box-shadow:
+    0 0 0 3px rgba(255, 107, 0, 0.10),
+    0 0 16px rgba(255, 107, 0, 0.06);
+}
+
+.fieldInput.error {
+  border-color: rgba(255, 68, 68, 0.6);
+  animation: shake 0.35s ease;
+}
+
+.fieldInput.valid {
+  border-color: rgba(0, 208, 132, 0.4);
+}
+
+/* Input with only left icon (no right button) */
+.fieldInputLeft {
+  padding: 0 16px 0 44px;
+}
+
+.fieldIcon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fieldIconRight {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: rgba(255, 255, 255, 0.3);
+  pointer-events: auto;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.fieldIconRight:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.fieldError {
+  font-size: 12px;
+  color: #FF4444;
+  margin-top: 4px;
+  padding-left: 2px;
+  font-family: var(--font-inter), sans-serif;
+}
+
+.fieldHint {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.30);
+  margin-top: 4px;
+  padding-left: 2px;
+  font-family: var(--font-inter), sans-serif;
+}
+
+.fieldPreview {
+  font-size: 12px;
+  color: rgba(0, 168, 232, 0.7);
+  margin-top: 4px;
+  padding-left: 2px;
+  font-family: var(--font-inter), sans-serif;
+}
+
+/* ── Password Strength ───────────────────────────────────── */
+
+.strengthBar {
+  height: 3px;
+  border-radius: 2px;
+  margin-top: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.strengthFill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.35s ease, background-color 0.35s ease;
+}
+
+.strengthLabel {
+  font-size: 11px;
+  margin-top: 4px;
+  text-align: right;
+  font-family: var(--font-inter), sans-serif;
+}
+
+/* ── Buttons ─────────────────────────────────────────────── */
+
+.btn {
+  width: 100%;
+  height: 52px;
+  border-radius: 12px;
+  border: none;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btnPrimary {
+  width: 100%;
+  height: 52px;
+  border-radius: 12px;
+  border: none;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #FF6B00 0%, #FF8C00 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(255, 107, 0, 0.30);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.btnPrimary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(255, 107, 0, 0.45);
+}
+
+.btnPrimary:active {
+  transform: translateY(0);
+}
+
+.btnPrimary:disabled {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.btnSecondary {
+  width: 100%;
+  height: 52px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.7);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.btnSecondary:hover {
+  background: rgba(255, 255, 255, 0.10);
+  color: #ffffff;
+}
+
+.btnGhost {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 4px 8px;
+}
+
+.btnGhost:hover {
+  color: #ffffff;
+}
+
+/* ── Divider ─────────────────────────────────────────────── */
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 13px;
+  font-family: var(--font-inter), sans-serif;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ── Google Button ───────────────────────────────────────── */
+
+.googleBtn {
+  width: 100%;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid rgba(255, 255, 255, 0.10);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font-inter), sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.googleBtn:hover {
+  background: rgba(255, 255, 255, 0.10);
+  color: #ffffff;
+}
+
+/* ── Guest Button ────────────────────────────────────────── */
+
+.guestBtn {
+  width: 100%;
+  height: 44px;
+  border-radius: 12px;
+  background: transparent;
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 13px;
+  font-family: var(--font-inter), sans-serif;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.guestBtn:hover {
+  border-color: rgba(255, 255, 255, 0.30);
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* ── Auth Link ───────────────────────────────────────────── */
+
+.authLink {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.45);
+  text-align: center;
+  margin-top: 20px;
+  font-family: var(--font-inter), sans-serif;
+}
+
+.authLink a {
+  color: #FF6B00;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.authLink a:hover {
+  text-decoration: underline;
+}
+
+/* ── Step Indicators ─────────────────────────────────────── */
+
+.steps {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+.step {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.18);
+  transition: width 0.35s ease, background 0.35s ease;
+}
+
+.stepActive {
+  width: 28px;
+  background: linear-gradient(90deg, #FF6B00, #FFA500);
+}
+
+.stepDone {
+  background: #00D084;
+}
+
+.stepContent {
+  animation: slideUp 0.4s ease both;
+}
+
+/* ── OTP Input ───────────────────────────────────────────── */
+
+.otpWrap {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.otpBox {
+  width: 48px;
+  height: 56px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+  color: #ffffff;
+  font-family: var(--font-poppins), sans-serif;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.otpBox:focus {
+  border-color: #FF6B00;
+  box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.15);
+  background: rgba(255, 107, 0, 0.04);
+}
+
+.otpBoxFilled {
+  border-color: rgba(0, 168, 232, 0.5);
+  background: rgba(0, 168, 232, 0.06);
+}
+
+/* ── Phone Input ─────────────────────────────────────────── */
+
+.phonePrefix {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 600;
+  font-family: var(--font-inter), sans-serif;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.phoneInput {
+  padding-left: 56px !important;
+}
+
+/* ── OTP Timer ───────────────────────────────────────────── */
+
+.timer {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.35);
+  text-align: center;
+  margin-top: 8px;
+  font-family: var(--font-inter), sans-serif;
+}
+
+.timerActive {
+  color: rgba(0, 168, 232, 0.7);
+}
+
+/* ── Success Badge ───────────────────────────────────────── */
+
+.successBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: rgba(0, 208, 132, 0.10);
+  border: 1px solid rgba(0, 208, 132, 0.25);
+  color: #00D084;
+  font-size: 13px;
+  font-family: var(--font-inter), sans-serif;
+  margin-top: 8px;
+}
+
+/* ── Spinner ─────────────────────────────────────────────── */
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+/* ── Global Error ────────────────────────────────────────── */
+
+.globalError {
+  font-size: 13px;
+  color: #FF4444;
+  background: rgba(255, 68, 68, 0.08);
+  border: 1px solid rgba(255, 68, 68, 0.20);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  font-family: var(--font-inter), sans-serif;
+  animation: fadeIn 0.2s ease;
+}
+
+/* ── Terms Checkbox ──────────────────────────────────────── */
+
+.checkboxRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  accent-color: #FF6B00;
+  cursor: pointer;
+}
+
+.checkboxLabel {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.50);
+  font-family: var(--font-inter), sans-serif;
+  line-height: 1.5;
+}
+
+.checkboxLabel a {
+  color: #FF6B00;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.checkboxLabel a:hover {
+  text-decoration: underline;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+
+@media (max-width: 480px) {
+  .panel {
+    padding: 24px 20px;
+  }
+
+  .otpBox {
+    width: 42px;
+    height: 50px;
+    font-size: 20px;
+  }
+}

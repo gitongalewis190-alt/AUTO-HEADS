@@ -434,9 +434,108 @@ hr.divider-line {
   .panel { padding: 24px 18px; }
   .otp-box { width: 40px; height: 50px; font-size: 20px; }
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PRINT BUTTON (screen only)
+   ══════════════════════════════════════════════════════════════════════════ */
+.print-bar {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; justify-content: center; gap: 10px;
+  padding: 12px; background: rgba(11,11,18,0.92);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px);
+}
+.print-bar button {
+  font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 600;
+  padding: 10px 18px; border-radius: 10px; cursor: pointer;
+  background: linear-gradient(135deg, #FF6B00, #FF8C00); color: #fff; border: none;
+}
+.print-bar span {
+  font-size: 12px; color: rgba(255,255,255,0.4); align-self: center;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PLAIN-ENGLISH EXPLANATION CARDS
+   These sit on screen (not hidden in code comments) so any non-developer
+   reading or printing this page can understand what each effect does and
+   why it exists, without needing to read CSS.
+   ══════════════════════════════════════════════════════════════════════════ */
+.explain {
+  background: rgba(255,255,255,0.045);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-left: 3px solid #FF6B00;
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 24px;
+  max-width: 460px; width: 100%;
+}
+.explain b {
+  display: block; font-family: 'Poppins', sans-serif; font-size: 12px;
+  font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  color: #FF8C00; margin-bottom: 6px;
+}
+.explain p {
+  font-size: 14px; line-height: 1.65; color: rgba(255,255,255,0.72);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PRINT STYLESHEET
+   Screen version is dark + blurred + animated — none of that survives
+   paper. This rewrites colours to a clean light document, removes motion
+   and decoration, and forces one section per printed page.
+   ══════════════════════════════════════════════════════════════════════════ */
+@media print {
+  .print-bar { display: none !important; }
+  .bg, .orb-orange, .orb-blue, .dot-grid { display: none !important; }
+
+  * { animation: none !important; transition: none !important; box-shadow: none !important; }
+
+  body { background: #fff !important; color: #111 !important; }
+  .sandbox-desc, .section-note, .form-sub, .field-hint { color: #444 !important; }
+  .sandbox-title, .form-title { color: #111 !important; }
+  .word-heads { color: #111 !important; }
+  .word-auto { -webkit-text-fill-color: #FF6B00 !important; background: none !important; color: #FF6B00 !important; }
+
+  .panel {
+    background: #f6f6f8 !important;
+    border: 1px solid #ccc !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    page-break-inside: avoid;
+  }
+  .panel::before { display: none !important; }
+
+  .field-input {
+    background: #fff !important; border: 1.5px solid #aaa !important; color: #111 !important;
+  }
+  .field-label { color: #333 !important; }
+  .field-icon, .field-icon-right { color: #777 !important; }
+
+  .btn-primary { background: #FF6B00 !important; color: #fff !important; }
+  .btn-secondary { background: #eee !important; border-color: #ccc !important; color: #222 !important; }
+  .btn-ghost { color: #555 !important; }
+  .btn-guest { color: #555 !important; border-color: #999 !important; }
+
+  .otp-box { background: #fff !important; border-color: #999 !important; color: #111 !important; }
+  .otp-box.filled { background: #eef7fb !important; border-color: #00A8E8 !important; }
+
+  .explain { background: #fff8f0 !important; border-color: #f0c9a0 !important; color: #222 !important; }
+  .explain p { color: #333 !important; }
+  .explain b { color: #b85400 !important; }
+
+  hr.divider-line { page-break-after: always; border-top: 1px solid #ccc !important; }
+
+  .auth-link a, .checkbox-label a { color: #b85400 !important; }
+}
 </style>
 </head>
 <body>
+
+<!-- ── Print bar (screen only) ─────────────────────────────────────────── -->
+<div class="print-bar">
+  <button onclick="window.print()">🖨 Print / Save as PDF</button>
+  <span>Prints as a clean, light, page-by-page document — no dark backgrounds wasted.</span>
+</div>
 
 <!-- ── Animated background ─────────────────────────────────────────────── -->
 <div class="bg">
@@ -458,7 +557,7 @@ hr.divider-line {
     <p class="sandbox-desc">
       Every component used in the login and register flows — fully interactive.
       Click into inputs, try the OTP boxes, break the error states.
-      Each section is annotated with how the technique works.
+      Each section includes a plain-English explanation and prints cleanly.
     </p>
   </div>
 
@@ -471,6 +570,16 @@ hr.divider-line {
     Glassmorphism panel · Spinning gradient border · Glowing inputs · Forgot password toggle.
     Type "wrong" in email to trigger the error shake. Type "right@test.com" to trigger valid state.
   </p>
+  <div class="explain">
+    <b>In plain English</b>
+    <p>This is the box someone sees when they come back to sign in. The whole card looks like
+    frosted glass — you can sense colour and light behind it, but it's all softly blurred, so the
+    form itself stays easy to read. A thin glowing line slowly rotates around the edge like a
+    picture frame that's alive. If someone types the wrong email or password, the box shakes
+    gently (like shaking your head "no") and turns red. Below the form sits a "Continue with
+    Google" option and a dashed "browse as guest" button for people who just want to look around
+    without creating an account yet.</p>
+  </div>
 
   <div class="panel mb16" style="max-width:460px;width:100%">
     <h2 class="form-title">Welcome back</h2>
@@ -568,6 +677,15 @@ hr.divider-line {
     Password strength meter · Confirm password green tick.
     Try typing a weak password like "abc" then a strong one like "MyC@r2026!".
   </p>
+  <div class="explain">
+    <b>In plain English</b>
+    <p>Sign-up happens in 3 short steps instead of one long form, which feels less intimidating.
+    Three dots near the top show progress — the current step stretches into a long orange pill,
+    finished steps turn green. As someone types a username, a live preview shows exactly what
+    their public profile link will look like (e.g. <code>autoheads.co/@david_abel</code>). As they
+    type a password, a coloured bar fills up — red means weak, green means strong — so they know
+    immediately if it's safe, before they even submit.</p>
+  </div>
 
   <div class="panel" style="max-width:460px;width:100%">
     <!-- Step dots -->
@@ -676,6 +794,15 @@ hr.divider-line {
     OTP boxes auto-advance on each digit. Backspace goes to the previous box.
     Paste a 6-digit number to fill all at once. Try pasting <code>123456</code>.
   </p>
+  <div class="explain">
+    <b>In plain English</b>
+    <p>Instead of one long box for the 6-digit code sent by SMS, there are 6 separate boxes.
+    Type a digit and the cursor automatically jumps to the next box — no tapping needed between
+    digits. Hit backspace on an empty box and it jumps back to fix the previous one. If the code
+    arrives as a text message, the whole 6-digit number can be copied and pasted in one go — it
+    fills every box instantly instead of one at a time. A countdown tells the person how long
+    until they're allowed to ask for a new code.</p>
+  </div>
 
   <div class="panel" style="max-width:460px;width:100%">
     <div class="steps">
@@ -747,6 +874,14 @@ hr.divider-line {
   <p class="section-note">
     All three dots are done. Try clicking "Create my account" without ticking the checkbox to see the error.
   </p>
+  <div class="explain">
+    <b>In plain English</b>
+    <p>The final step asks for an optional backup email, used only if someone ever loses access
+    to their account, plus a checkbox agreeing to the Terms of Service. They can't continue
+    without ticking that box — if they try, a clear red message tells them exactly why, in plain
+    language rather than a technical error code. Once they click "Create my account," a small
+    spinner shows the app is working, then a green confirmation message replaces it.</p>
+  </div>
 
   <div class="panel" style="max-width:460px;width:100%">
     <div class="steps">
@@ -809,6 +944,14 @@ hr.divider-line {
     <code>.btn-ghost</code> for low-priority (back, forgot).
     <code>.btn-guest</code> for the dashed guest button.
   </p>
+  <div class="explain">
+    <b>In plain English</b>
+    <p>Every button's style tells you how important it is, at a glance. Solid orange means
+    "this is the main thing to do here" (Sign In, Create Account). A glass-bordered button means
+    "here's another way to do it" (Continue with Google). Plain text means "low priority, do this
+    only if you need to" (Back, Forgot password?). A dashed outline means "this is an
+    alternative path" — browsing as a guest instead of signing up.</p>
+  </div>
 
   <div class="panel" style="max-width:460px;width:100%">
     <div class="gap8">
@@ -839,6 +982,12 @@ hr.divider-line {
     Success badge (<code>.success-badge</code>), error block (<code>.global-error</code>),
     and field-level error (<code>.field-error</code>). All use <code>animation: fadeIn</code>.
   </p>
+  <div class="explain">
+    <b>In plain English</b>
+    <p>Good news always appears in a green box, bad news always in a red box — the colour alone
+    tells you which it is before you even read the words. Both fade in gently rather than
+    popping in suddenly, which feels calmer and less jarring than an instant flash.</p>
+  </div>
 
   <div class="panel" style="max-width:460px;width:100%">
     <div class="success-badge mb16">
@@ -852,6 +1001,54 @@ hr.divider-line {
     <div class="global-error mb16">Incorrect email or password.</div>
     <div class="global-error mb16">Please accept the Terms of Service to continue.</div>
     <div class="field-error">This field is required.</div>
+  </div>
+
+
+  <hr class="divider-line" style="width:100%;max-width:460px">
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       APPENDIX — ONE-PAGE PLAIN-ENGLISH SUMMARY (prints as its own page)
+       ═══════════════════════════════════════════════════════════════════════ -->
+  <div class="section-label">Appendix — Quick Reference (Plain English)</div>
+  <p class="section-note">A one-page summary of every technique above, for anyone who just wants the gist without scrolling back up.</p>
+
+  <div class="panel" style="max-width:460px;width:100%">
+    <h2 class="form-title" style="font-size:20px;margin-bottom:18px">How everything works</h2>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div>
+        <p style="font-size:13px;font-weight:700;color:#FF8C00;margin-bottom:3px">1. Background orbs</p>
+        <p style="font-size:13px;color:rgba(255,255,255,0.62);line-height:1.6">Soft glowing colour blobs in the corners, blurred so they read as ambient light, not shapes.</p>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:700;color:#FF8C00;margin-bottom:3px">2. Frosted-glass panel</p>
+        <p style="font-size:13px;color:rgba(255,255,255,0.62);line-height:1.6">The form card looks like foggy glass with a slowly rotating glow around its edge.</p>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:700;color:#FF8C00;margin-bottom:3px">3. Glowing inputs</p>
+        <p style="font-size:13px;color:rgba(255,255,255,0.62);line-height:1.6">Tapped fields light up orange; wrong entries shake and turn red; correct ones turn green.</p>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:700;color:#FF8C00;margin-bottom:3px">4. Password strength bar</p>
+        <p style="font-size:13px;color:rgba(255,255,255,0.62);line-height:1.6">A bar fills and changes colour live as you type — red (weak) to green (strong).</p>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:700;color:#FF8C00;margin-bottom:3px">5. 6-box OTP code</p>
+        <p style="font-size:13px;color:rgba(255,255,255,0.62);line-height:1.6">One digit per box, auto-jumps forward, backspace jumps back, paste fills all six at once.</p>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:700;color:#FF8C00;margin-bottom:3px">6. Buttons by importance</p>
+        <p style="font-size:13px;color:rgba(255,255,255,0.62);line-height:1.6">Solid orange = main action. Glass border = alternative. Plain text = low priority. Dashed = guest path.</p>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:700;color:#FF8C00;margin-bottom:3px">7. Step dots</p>
+        <p style="font-size:13px;color:rgba(255,255,255,0.62);line-height:1.6">Three dots track sign-up progress; the current step stretches and glows, finished steps turn green.</p>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:700;color:#FF8C00;margin-bottom:3px">8. Success / error messages</p>
+        <p style="font-size:13px;color:rgba(255,255,255,0.62);line-height:1.6">Green always means it worked, red always means something needs fixing — colour-coded before you even read the text.</p>
+      </div>
+    </div>
   </div>
 
 
